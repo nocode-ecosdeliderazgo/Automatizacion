@@ -1,0 +1,108 @@
+# Configuracion del Paso 01: GO-ESP-01
+# Normalizacion de Insumo y Artefacto Base
+
+step01:
+  # Identificacion
+  step_id: "GO-ESP-01"
+  name: "Definicion inicial del curso"
+  version: "1.0.0"
+
+  # Limites de iteracion
+  max_auto_retries: 3          # Reintentos automaticos por validacion determinista
+  max_hitl_iterations: 2       # Ciclos de revision QA antes de escalar
+
+  # Umbrales de validacion
+  validation:
+    description_min_words: 150
+    description_max_words: 200
+    names_count: 3
+    objectives_min: 3
+    objectives_max: 6
+
+  # Validacion semantica
+  semantic:
+    enabled: true
+    confidence_threshold: 0.7
+    # Verbos prohibidos en objetivos (vagos, no medibles)
+    forbidden_verbs:
+      - "entender"
+      - "conocer"
+      - "apreciar"
+      - "saber"
+      - "comprender"
+      - "aprender"
+    # Verbos recomendados (observables)
+    recommended_verbs:
+      - "identificar"
+      - "aplicar"
+      - "demostrar"
+      - "crear"
+      - "analizar"
+      - "disenar"
+      - "implementar"
+      - "evaluar"
+      - "desarrollar"
+      - "construir"
+
+  # Configuracion LLM (Gemini 3 Flash)
+  llm:
+    provider: "google"
+    model: "gemini-2.0-flash"
+    temperature: 1.0           # Recomendado por Google para Gemini
+    max_tokens: 8192
+
+    # Thinking levels por componente
+    thinking_levels:
+      generation: "low"        # Generacion inicial
+      correction: "minimal"    # Autocorreccion rapida
+      semantic_critic: "medium" # Evaluacion semantica
+      escalated: "high"        # Casos complejos
+
+    # Structured output
+    response_mime_type: "application/json"
+
+    # Retry policy
+    retry:
+      max_attempts: 3
+      backoff_base: 2          # Segundos
+      backoff_multiplier: 2
+
+  # Locale
+  locale:
+    default: "es"
+    supported:
+      - "es"
+      - "es-MX"
+      - "es-ES"
+
+  # Logging y auditoria
+  audit:
+    enabled: true
+    include_llm_ops: true
+    storage: "file"            # file | database | coda
+    log_dir: "logs"
+    log_format: "json"
+
+  # Estados del workflow
+  states:
+    - "DRAFT_INPUT"
+    - "GENERATED"
+    - "VALIDATING_DETERMINISTIC"
+    - "AUTO_REPAIR"
+    - "VALIDATING_SEMANTIC"
+    - "QA_REVIEW"
+    - "APPROVED"
+    - "REJECTED"
+    - "ESCALATED"
+    - "PERSISTED"
+
+  # Politica de escalamiento
+  escalation:
+    escalate_to_role: "Cliente/Superior directo"
+    escalate_when:
+      - "iteration_count >= max_hitl_iterations AND DoD_not_met"
+    include_in_payload:
+      - "idea_central"
+      - "artifact_candidates"
+      - "validation_results"
+      - "iteration_history"

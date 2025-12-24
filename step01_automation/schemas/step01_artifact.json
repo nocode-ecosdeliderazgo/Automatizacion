@@ -1,0 +1,66 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://ecosdeliderazgo.com/schemas/step01_artifact.json",
+  "title": "GO-ESP-01 Artifact",
+  "description": "Artefacto base del Paso 01: 3 nombres, 3-6 objetivos, descripcion 150-200 palabras",
+  "type": "object",
+  "required": ["nombres", "objetivos", "descripcion"],
+  "properties": {
+    "nombres": {
+      "type": "array",
+      "description": "Exactamente 3 nombres alternativos para el curso",
+      "items": {
+        "type": "string",
+        "minLength": 5,
+        "maxLength": 100
+      },
+      "minItems": 3,
+      "maxItems": 3
+    },
+    "objetivos": {
+      "type": "array",
+      "description": "Entre 3 y 6 objetivos de aprendizaje medibles y observables",
+      "items": {
+        "type": "string",
+        "minLength": 10,
+        "maxLength": 300
+      },
+      "minItems": 3,
+      "maxItems": 6
+    },
+    "descripcion": {
+      "type": "object",
+      "description": "Descripcion estructurada del curso (150-200 palabras totales)",
+      "required": ["texto", "publico_objetivo", "beneficios", "estructura_general", "diferenciador"],
+      "properties": {
+        "texto": {
+          "type": "string",
+          "description": "Texto completo de la descripcion (150-200 palabras)",
+          "minLength": 500,
+          "maxLength": 1500
+        },
+        "publico_objetivo": {
+          "type": "string",
+          "description": "A quien va dirigido el curso",
+          "minLength": 10
+        },
+        "beneficios": {
+          "type": "string",
+          "description": "Beneficios clave que obtendra el participante",
+          "minLength": 10
+        },
+        "estructura_general": {
+          "type": "string",
+          "description": "Estructura general del curso",
+          "minLength": 10
+        },
+        "diferenciador": {
+          "type": "string",
+          "description": "Elemento diferenciador unico del curso",
+          "minLength": 10
+        }
+      }
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,34 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://ecosdeliderazgo.com/schemas/validation_result.json",
+  "title": "Validation Result",
+  "description": "Resultado estandar de una validacion",
+  "type": "object",
+  "required": ["pass", "code", "message"],
+  "properties": {
+    "pass": {
+      "type": "boolean",
+      "description": "Si la validacion paso o fallo"
+    },
+    "code": {
+      "type": "string",
+      "description": "Codigo de la validacion",
+      "enum": ["VAL_001", "VAL_002", "VAL_003", "VAL_004", "VAL_005", "VAL_006"]
+    },
+    "message": {
+      "type": "string",
+      "description": "Mensaje descriptivo del resultado"
+    },
+    "observed": {
+      "description": "Valor observado (conteo, lista, etc.)"
+    },
+    "expected": {
+      "description": "Valor esperado"
+    },
+    "severity": {
+      "type": "string",
+      "enum": ["error", "warning"],
+      "default": "error"
+    }
+  }
+}

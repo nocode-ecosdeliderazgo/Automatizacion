@@ -6,7 +6,8 @@
       "WebFetch(domain:ai.google.dev)",
       "WebFetch(domain:openrouter.ai)",
       "WebFetch(domain:www.cometapi.com)",
-      "WebFetch(domain:apidog.com)"
+      "WebFetch(domain:apidog.com)",
+      "Bash(C:/Python314/python.exe:*)"
     ]
   }
 }

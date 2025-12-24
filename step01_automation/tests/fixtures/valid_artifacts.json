@@ -1,0 +1,55 @@
+{
+  "artifacts": [
+    {
+      "id": "valid_001",
+      "idea_central": "Curso de liderazgo transformacional para gerentes",
+      "artifact": {
+        "nombres": [
+          "Liderazgo Transformacional: De Gerente a Líder Inspirador",
+          "El Arte del Liderazgo que Transforma Equipos",
+          "Gerentes que Inspiran: Masterclass en Liderazgo Transformacional"
+        ],
+        "objetivos": [
+          "Identificar los cuatro componentes del liderazgo transformacional y su aplicación en contextos organizacionales",
+          "Aplicar técnicas de comunicación inspiradora para motivar equipos hacia objetivos compartidos",
+          "Diseñar un plan de desarrollo personal como líder transformacional con metas medibles",
+          "Demostrar habilidades de coaching para desarrollar el potencial de los colaboradores"
+        ],
+        "descripcion": {
+          "texto": "Este programa está diseñado para gerentes y líderes de equipo que buscan evolucionar de un estilo de gestión tradicional hacia un liderazgo que inspire y transforme. A través de metodologías experienciales y casos de estudio reales, los participantes desarrollarán competencias clave para motivar equipos, gestionar el cambio y crear culturas de alto rendimiento. El curso se estructura en cuatro módulos progresivos: fundamentos del liderazgo transformacional, comunicación inspiradora, desarrollo de equipos y gestión del cambio organizacional. Lo que distingue este programa es su enfoque práctico basado en neurociencia del liderazgo y herramientas de coaching ejecutivo, permitiendo a los participantes aplicar inmediatamente lo aprendido en sus contextos laborales con resultados tangibles desde la primera semana.",
+          "publico_objetivo": "Gerentes, supervisores y líderes de equipo con al menos 2 años de experiencia en gestión de personas",
+          "beneficios": "Habilidades de comunicación inspiradora, técnicas de coaching, herramientas de gestión del cambio y un plan de desarrollo personal como líder",
+          "estructura_general": "4 módulos progresivos con metodología experiencial, casos de estudio y coaching grupal",
+          "diferenciador": "Enfoque basado en neurociencia del liderazgo y herramientas de coaching ejecutivo con aplicación inmediata"
+        }
+      },
+      "word_count": 178
+    },
+    {
+      "id": "valid_002",
+      "idea_central": "Taller de comunicación efectiva para equipos remotos",
+      "artifact": {
+        "nombres": [
+          "Comunicación Sin Fronteras: Conectando Equipos Remotos",
+          "Domina la Comunicación Virtual: Guía para Equipos Distribuidos",
+          "El Arte de Comunicar a Distancia: Taller Práctico"
+        ],
+        "objetivos": [
+          "Aplicar técnicas de comunicación asíncrona efectiva utilizando herramientas digitales colaborativas",
+          "Diseñar protocolos de comunicación que optimicen la productividad en equipos distribuidos",
+          "Demostrar habilidades para conducir reuniones virtuales productivas y participativas",
+          "Implementar estrategias para mantener la cohesión y cultura de equipo en entornos remotos",
+          "Evaluar y mejorar los canales de comunicación existentes en su equipo"
+        ],
+        "descripcion": {
+          "texto": "Este taller práctico está dirigido a líderes y miembros de equipos que trabajan de forma remota o híbrida y necesitan optimizar su comunicación. Los participantes aprenderán a superar las barreras de la distancia física mediante técnicas probadas de comunicación digital. El programa combina sesiones sincrónicas con ejercicios prácticos en plataformas colaborativas, permitiendo experimentar directamente las herramientas y metodologías enseñadas. Se estructura en tres bloques: fundamentos de comunicación remota, herramientas y protocolos efectivos, y construcción de cultura virtual. El diferenciador clave es el enfoque hands-on con simulaciones de situaciones reales y feedback personalizado, además de templates listos para implementar inmediatamente en cualquier organización.",
+          "publico_objetivo": "Líderes de equipo, project managers y profesionales que trabajan en equipos remotos o híbridos",
+          "beneficios": "Técnicas de comunicación asíncrona, habilidades para reuniones virtuales efectivas, templates de protocolos listos para usar",
+          "estructura_general": "3 bloques con sesiones sincrónicas, ejercicios prácticos en plataformas colaborativas y feedback personalizado",
+          "diferenciador": "Enfoque hands-on con simulaciones reales y templates implementables inmediatamente"
+        }
+      },
+      "word_count": 165
+    }
+  ]
+}

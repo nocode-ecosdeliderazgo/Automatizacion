@@ -1,0 +1,57 @@
+# ===========================================
+# Dependencias - GO-ESP-01 Automation
+# ===========================================
+# Instalar con: pip install -r requirements.txt
+
+# ------------------------------
+# CORE - Requeridas
+# ------------------------------
+
+# Google Gemini SDK (nuevo SDK unificado)
+google-genai>=1.0.0
+
+# Validacion de datos
+pydantic>=2.0
+jsonschema>=4.0
+
+# Configuracion
+pyyaml>=6.0
+python-dotenv>=1.0
+
+# ------------------------------
+# LOGGING Y OBSERVABILIDAD
+# ------------------------------
+
+structlog>=23.0
+
+# ------------------------------
+# HTTP
+# ------------------------------
+
+httpx>=0.24
+
+# ------------------------------
+# TESTING
+# ------------------------------
+
+pytest>=7.0
+pytest-asyncio>=0.21
+pytest-cov>=4.0
+
+# ------------------------------
+# DESARROLLO (opcional)
+# ------------------------------
+
+black>=23.0
+isort>=5.0
+mypy>=1.0
+
+# ------------------------------
+# PRODUCCION (opcional)
+# ------------------------------
+
+# Para usar Vertex AI en lugar de Google AI Studio:
+# google-cloud-aiplatform>=1.40
+
+# Para integracion con Coda:
+# codaio>=0.6.0

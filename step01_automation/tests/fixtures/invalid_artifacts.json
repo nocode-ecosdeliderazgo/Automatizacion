@@ -1,0 +1,201 @@
+{
+  "artifacts": [
+    {
+      "id": "invalid_001_two_names",
+      "description": "Solo 2 nombres (requiere 3)",
+      "expected_error": "VAL_001",
+      "artifact": {
+        "nombres": [
+          "Liderazgo Transformacional",
+          "El Arte del Liderazgo"
+        ],
+        "objetivos": [
+          "Identificar los componentes del liderazgo transformacional",
+          "Aplicar técnicas de comunicación inspiradora",
+          "Diseñar un plan de desarrollo personal"
+        ],
+        "descripcion": {
+          "texto": "Este programa está diseñado para gerentes y líderes de equipo que buscan evolucionar de un estilo de gestión tradicional hacia un liderazgo que inspire y transforme. A través de metodologías experienciales y casos de estudio reales, los participantes desarrollarán competencias clave para motivar equipos, gestionar el cambio y crear culturas de alto rendimiento. El curso se estructura en cuatro módulos progresivos que cubren los fundamentos del liderazgo transformacional hasta la gestión del cambio organizacional.",
+          "publico_objetivo": "Gerentes y líderes de equipo",
+          "beneficios": "Habilidades de comunicación y coaching",
+          "estructura_general": "4 módulos progresivos",
+          "diferenciador": "Enfoque basado en neurociencia"
+        }
+      }
+    },
+    {
+      "id": "invalid_002_four_names",
+      "description": "4 nombres (requiere exactamente 3)",
+      "expected_error": "VAL_001",
+      "artifact": {
+        "nombres": [
+          "Liderazgo Transformacional",
+          "El Arte del Liderazgo",
+          "Gerentes que Inspiran",
+          "Líderes del Futuro"
+        ],
+        "objetivos": [
+          "Identificar los componentes del liderazgo",
+          "Aplicar técnicas de comunicación",
+          "Diseñar un plan de desarrollo"
+        ],
+        "descripcion": {
+          "texto": "Programa para gerentes que buscan evolucionar su estilo de liderazgo a través de metodologías experienciales y casos de estudio reales. Los participantes desarrollarán competencias clave para motivar equipos y gestionar el cambio. El curso se estructura en cuatro módulos progresivos que cubren desde los fundamentos hasta la gestión del cambio organizacional completa.",
+          "publico_objetivo": "Gerentes",
+          "beneficios": "Habilidades de comunicación",
+          "estructura_general": "4 módulos",
+          "diferenciador": "Enfoque práctico"
+        }
+      }
+    },
+    {
+      "id": "invalid_003_two_objectives",
+      "description": "Solo 2 objetivos (requiere 3-6)",
+      "expected_error": "VAL_002",
+      "artifact": {
+        "nombres": [
+          "Liderazgo Transformacional",
+          "El Arte del Liderazgo",
+          "Gerentes que Inspiran"
+        ],
+        "objetivos": [
+          "Identificar los componentes del liderazgo",
+          "Aplicar técnicas de comunicación"
+        ],
+        "descripcion": {
+          "texto": "Este programa está diseñado para gerentes y líderes de equipo que buscan evolucionar de un estilo de gestión tradicional hacia un liderazgo que inspire y transforme. A través de metodologías experienciales y casos de estudio reales, los participantes desarrollarán competencias clave para motivar equipos, gestionar el cambio y crear culturas de alto rendimiento. El curso se estructura en cuatro módulos progresivos.",
+          "publico_objetivo": "Gerentes y líderes",
+          "beneficios": "Habilidades de liderazgo",
+          "estructura_general": "4 módulos",
+          "diferenciador": "Metodología experiencial"
+        }
+      }
+    },
+    {
+      "id": "invalid_004_seven_objectives",
+      "description": "7 objetivos (requiere máximo 6)",
+      "expected_error": "VAL_002",
+      "artifact": {
+        "nombres": [
+          "Liderazgo Transformacional",
+          "El Arte del Liderazgo",
+          "Gerentes que Inspiran"
+        ],
+        "objetivos": [
+          "Identificar los componentes del liderazgo",
+          "Aplicar técnicas de comunicación",
+          "Diseñar planes de desarrollo",
+          "Demostrar habilidades de coaching",
+          "Evaluar el desempeño del equipo",
+          "Implementar estrategias de cambio",
+          "Analizar métricas de liderazgo"
+        ],
+        "descripcion": {
+          "texto": "Este programa está diseñado para gerentes y líderes de equipo que buscan evolucionar de un estilo de gestión tradicional hacia un liderazgo que inspire y transforme. A través de metodologías experienciales y casos de estudio reales, los participantes desarrollarán competencias clave para motivar equipos, gestionar el cambio y crear culturas de alto rendimiento. El curso se estructura en cuatro módulos progresivos.",
+          "publico_objetivo": "Gerentes",
+          "beneficios": "Múltiples habilidades",
+          "estructura_general": "4 módulos",
+          "diferenciador": "Enfoque integral"
+        }
+      }
+    },
+    {
+      "id": "invalid_005_short_description",
+      "description": "Descripción muy corta (menos de 150 palabras)",
+      "expected_error": "VAL_003",
+      "word_count": 45,
+      "artifact": {
+        "nombres": [
+          "Liderazgo Transformacional",
+          "El Arte del Liderazgo",
+          "Gerentes que Inspiran"
+        ],
+        "objetivos": [
+          "Identificar los componentes del liderazgo",
+          "Aplicar técnicas de comunicación",
+          "Diseñar planes de desarrollo"
+        ],
+        "descripcion": {
+          "texto": "Este programa está diseñado para gerentes. Los participantes desarrollarán competencias clave para motivar equipos. El curso tiene cuatro módulos.",
+          "publico_objetivo": "Gerentes",
+          "beneficios": "Habilidades",
+          "estructura_general": "4 módulos",
+          "diferenciador": "Práctico"
+        }
+      }
+    },
+    {
+      "id": "invalid_006_long_description",
+      "description": "Descripción muy larga (más de 200 palabras)",
+      "expected_error": "VAL_003",
+      "word_count": 250,
+      "artifact": {
+        "nombres": [
+          "Liderazgo Transformacional",
+          "El Arte del Liderazgo",
+          "Gerentes que Inspiran"
+        ],
+        "objetivos": [
+          "Identificar los componentes del liderazgo",
+          "Aplicar técnicas de comunicación",
+          "Diseñar planes de desarrollo"
+        ],
+        "descripcion": {
+          "texto": "Este programa integral y comprehensivo está específicamente diseñado y desarrollado para gerentes, supervisores, líderes de equipo y profesionales que ocupan posiciones de liderazgo en organizaciones de diversos tamaños y sectores, quienes buscan activamente evolucionar y transformar su estilo de gestión tradicional hacia un liderazgo verdaderamente inspirador y transformacional que genere impacto positivo. A través de metodologías experienciales innovadoras, casos de estudio reales extraídos de empresas líderes, ejercicios prácticos individuales y grupales, simulaciones de situaciones desafiantes, y sesiones de coaching personalizado, los participantes desarrollarán y fortalecerán competencias clave absolutamente necesarias para motivar equipos de alto rendimiento, gestionar procesos de cambio organizacional complejos, crear y mantener culturas de excelencia, y alcanzar resultados extraordinarios de manera consistente y sostenible. El curso completo se estructura cuidadosamente en cuatro módulos progresivos e interconectados que cubren desde los fundamentos teóricos y conceptuales del liderazgo transformacional hasta las aplicaciones prácticas más avanzadas de gestión del cambio organizacional, incluyendo herramientas de diagnóstico, frameworks de implementación y métricas de seguimiento.",
+          "publico_objetivo": "Gerentes y supervisores de todos los niveles",
+          "beneficios": "Desarrollo integral de competencias de liderazgo",
+          "estructura_general": "4 módulos progresivos con metodología mixta",
+          "diferenciador": "Enfoque basado en neurociencia y coaching ejecutivo"
+        }
+      }
+    },
+    {
+      "id": "invalid_007_vague_objectives",
+      "description": "Objetivos con verbos vagos (entender, conocer)",
+      "expected_error": "VAL_006",
+      "artifact": {
+        "nombres": [
+          "Liderazgo Transformacional",
+          "El Arte del Liderazgo",
+          "Gerentes que Inspiran"
+        ],
+        "objetivos": [
+          "Entender los principios del liderazgo transformacional",
+          "Conocer las técnicas de comunicación efectiva",
+          "Saber cómo motivar a un equipo de trabajo",
+          "Comprender la importancia del feedback"
+        ],
+        "descripcion": {
+          "texto": "Este programa está diseñado para gerentes y líderes de equipo que buscan evolucionar de un estilo de gestión tradicional hacia un liderazgo que inspire y transforme. A través de metodologías experienciales y casos de estudio reales, los participantes desarrollarán competencias clave para motivar equipos, gestionar el cambio y crear culturas de alto rendimiento. El curso se estructura en cuatro módulos progresivos que cubren los fundamentos del liderazgo transformacional hasta la gestión del cambio organizacional.",
+          "publico_objetivo": "Gerentes y líderes de equipo",
+          "beneficios": "Habilidades de comunicación y coaching",
+          "estructura_general": "4 módulos progresivos",
+          "diferenciador": "Enfoque basado en neurociencia"
+        }
+      }
+    },
+    {
+      "id": "invalid_008_missing_element",
+      "description": "Falta elemento diferenciador en descripción",
+      "expected_error": "VAL_004",
+      "artifact": {
+        "nombres": [
+          "Liderazgo Transformacional",
+          "El Arte del Liderazgo",
+          "Gerentes que Inspiran"
+        ],
+        "objetivos": [
+          "Identificar los componentes del liderazgo",
+          "Aplicar técnicas de comunicación",
+          "Diseñar planes de desarrollo"
+        ],
+        "descripcion": {
+          "texto": "Este programa está diseñado para gerentes y líderes de equipo que buscan evolucionar de un estilo de gestión tradicional hacia un liderazgo que inspire y transforme. A través de metodologías experienciales y casos de estudio reales, los participantes desarrollarán competencias clave para motivar equipos, gestionar el cambio y crear culturas de alto rendimiento. El curso se estructura en cuatro módulos progresivos.",
+          "publico_objetivo": "Gerentes y líderes de equipo",
+          "beneficios": "Habilidades de comunicación y coaching",
+          "estructura_general": "4 módulos progresivos"
+        }
+      }
+    }
+  ]
+}

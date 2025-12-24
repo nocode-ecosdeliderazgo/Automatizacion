@@ -1,0 +1,102 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://ecosdeliderazgo.com/schemas/qa_packet.json",
+  "title": "QA Packet",
+  "description": "Paquete de revision QA para el Paso 01",
+  "type": "object",
+  "required": ["artifact", "checks", "metadata"],
+  "properties": {
+    "artifact": {
+      "$ref": "step01_artifact.json"
+    },
+    "checks": {
+      "type": "object",
+      "description": "Resultados de validaciones",
+      "required": ["names_ok", "objectives_count_ok", "word_count_ok", "elements_ok", "objectives_measurable_ok"],
+      "properties": {
+        "names_ok": {
+          "type": "boolean",
+          "description": "Exactamente 3 nombres"
+        },
+        "objectives_count_ok": {
+          "type": "boolean",
+          "description": "Entre 3-6 objetivos"
+        },
+        "word_count_ok": {
+          "type": "boolean",
+          "description": "Descripcion 150-200 palabras"
+        },
+        "elements_ok": {
+          "type": "boolean",
+          "description": "Todos los elementos requeridos presentes"
+        },
+        "objectives_measurable_ok": {
+          "type": "boolean",
+          "description": "Objetivos son medibles/observables"
+        }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "required": ["course_id", "idea_central", "iteration_count", "operator_id"],
+      "properties": {
+        "course_id": {
+          "type": "string"
+        },
+        "idea_central": {
+          "type": "string"
+        },
+        "iteration_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "operator_id": {
+          "type": "string"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "validation_details": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "pattern": "^VAL_[0-9]{3}$"
+          },
+          "pass": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string"
+          },
+          "observed": {}
+        }
+      }
+    },
+    "semantic_review": {
+      "type": "object",
+      "properties": {
+        "pass": {
+          "type": "boolean"
+        },
+        "confidence": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "rationale": {
+          "type": "string"
+        }
+      }
+    },
+    "notes": {
+      "type": "string",
+      "description": "Notas adicionales del operador o QA"
+    }
+  }
+}
