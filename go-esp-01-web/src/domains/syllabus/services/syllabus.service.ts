@@ -1,4 +1,4 @@
-// GO-ESP-02: Servicio de Syllabus (Mock)
+// GO-ESP-02: Servicio de Syllabus con Gemini AI via API
 
 import type {
   Esp02Route,
@@ -11,83 +11,11 @@ import type {
 import { runAllValidations } from '../validators/syllabus.validators'
 import { artifactsService } from '@/domains/artifacts/services/artifacts.service'
 
-// Estado en memoria para mocks (global para persistir entre renders)
+// Estado en memoria para desarrollo (global para persistir entre renders)
 const temarioStore = new Map<string, TemarioEsp02 & { state: Esp02StepState; iteration_count: number }>()
 
 // Generar UUID simple
 const generateId = () => Math.random().toString(36).substring(2, 11)
-
-// Generar temario mock basado en objetivos
-function generateMockTemario(
-  objetivos: string[],
-  ideaCentral: string
-): SyllabusModule[] {
-  return objetivos.map((objetivo, index) => {
-    const moduleNum = index + 1
-    const lessonsCount = Math.floor(Math.random() * 4) + 3 // 3-6 lecciones
-
-    const lessons = Array.from({ length: lessonsCount }, (_, lessonIndex) => ({
-      id: generateId(),
-      title: `Leccion ${moduleNum}.${lessonIndex + 1}: ${getRandomLessonTitle(objetivo)}`,
-      objective_specific: generateSpecificObjective(objetivo)
-    }))
-
-    return {
-      id: generateId(),
-      objective_general_ref: objetivo,
-      title: `Modulo ${moduleNum}: ${extractModuleTitle(objetivo)}`,
-      lessons
-    }
-  })
-}
-
-function getRandomLessonTitle(objetivo: string): string {
-  const templates = [
-    'Fundamentos y conceptos clave',
-    'Aplicacion practica',
-    'Herramientas y tecnicas',
-    'Casos de estudio',
-    'Ejercicios de consolidacion',
-    'Evaluacion y retroalimentacion'
-  ]
-  return templates[Math.floor(Math.random() * templates.length)]
-}
-
-function extractModuleTitle(objetivo: string): string {
-  const words = objetivo.split(' ')
-  const skipWords = ['comprender', 'aplicar', 'desarrollar', 'identificar', 'analizar']
-  const start = skipWords.includes(words[0].toLowerCase()) ? 1 : 0
-  return words.slice(start, start + 4).join(' ')
-}
-
-function generateSpecificObjective(objetivoGeneral: string): string {
-  const verbs = ['Identificar', 'Describir', 'Explicar', 'Aplicar', 'Analizar', 'Demostrar', 'Evaluar']
-  const verb = verbs[Math.floor(Math.random() * verbs.length)]
-  const context = objetivoGeneral.toLowerCase().split(' ').slice(1, 5).join(' ')
-  return `${verb} los elementos clave de ${context} mediante ejercicios practicos y casos de estudio.`
-}
-
-// Simulacion de pipeline con estados progresivos
-async function simulatePipeline(artifactId: string, objetivos: string[], ideaCentral: string, route: Esp02Route) {
-  const stored = temarioStore.get(artifactId)
-  if (!stored) return
-
-  // Paso 1: Generar (despues de 2 segundos)
-  await new Promise(resolve => setTimeout(resolve, 2000))
-
-  const modules = generateMockTemario(objetivos, ideaCentral)
-  stored.modules = modules
-  stored.state = 'STEP_VALIDATING'
-  temarioStore.set(artifactId, { ...stored })
-
-  // Paso 2: Validar (despues de 1.5 segundos)
-  await new Promise(resolve => setTimeout(resolve, 1500))
-
-  const validation = runAllValidations(modules, objetivos)
-  stored.validation = validation
-  stored.state = validation.automatic_pass ? 'STEP_READY_FOR_QA' : 'STEP_ESCALATED'
-  temarioStore.set(artifactId, { ...stored })
-}
 
 export const syllabusService = {
   async startGeneration(input: Esp02GenerationInput): Promise<Esp02GenerationResult> {
@@ -121,11 +49,72 @@ export const syllabusService = {
     temarioStore.set(artifactId, temarioData)
 
     // Iniciar pipeline en background (no bloqueante)
-    simulatePipeline(artifactId, objetivos, artifact.idea_central, route)
+    this.runPipeline(artifactId, objetivos, artifact.idea_central, route)
 
     return {
       success: true,
       state: 'STEP_GENERATING'
+    }
+  },
+
+  async runPipeline(
+    artifactId: string,
+    objetivos: string[],
+    ideaCentral: string,
+    route: Esp02Route
+  ): Promise<void> {
+    const stored = temarioStore.get(artifactId)
+    if (!stored) return
+
+    try {
+      console.log(`[ESP-02] Iniciando generacion de temario`)
+      console.log(`[ESP-02] Ruta: ${route}`)
+      console.log(`[ESP-02] Objetivos: ${objetivos.length}`)
+
+      // Paso 1: Generar temario via API (server-side con Gemini)
+      const response = await fetch('/api/syllabus', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ objetivos, ideaCentral, route })
+      })
+
+      if (!response.ok) {
+        throw new Error(`API error: ${response.status}`)
+      }
+
+      const content = await response.json()
+      console.log(`[ESP-02] Módulos generados: ${content.modules?.length}`)
+
+      // Convertir a formato con IDs
+      const modules: SyllabusModule[] = content.modules.map((mod: any) => ({
+        id: generateId(),
+        objective_general_ref: mod.objective_general_ref,
+        title: mod.title,
+        lessons: mod.lessons.map((lesson: any) => ({
+          id: generateId(),
+          title: lesson.title,
+          objective_specific: lesson.objective_specific
+        }))
+      }))
+
+      stored.modules = modules
+      stored.state = 'STEP_VALIDATING'
+      temarioStore.set(artifactId, { ...stored })
+      console.log('[ESP-02] Estado: STEP_VALIDATING')
+
+      // Paso 2: Validar temario
+      const validation = runAllValidations(modules, objetivos)
+      stored.validation = validation
+      stored.state = validation.automatic_pass ? 'STEP_READY_FOR_QA' : 'STEP_ESCALATED'
+      temarioStore.set(artifactId, { ...stored })
+
+      console.log(`[ESP-02] Validacion: ${validation.automatic_pass ? 'PASSED' : 'FAILED'}`)
+      console.log(`[ESP-02] Estado final: ${stored.state}`)
+
+    } catch (error) {
+      console.error('[ESP-02] Error en pipeline:', error)
+      stored.state = 'STEP_ESCALATED'
+      temarioStore.set(artifactId, { ...stored })
     }
   },
 
@@ -189,7 +178,7 @@ export const syllabusService = {
     temarioStore.set(artifactId, temario)
 
     const objetivos = artifact.objetivos as string[]
-    simulatePipeline(artifactId, objetivos, artifact.idea_central, temario.route)
+    this.runPipeline(artifactId, objetivos, artifact.idea_central, temario.route)
 
     return { success: true, state: 'STEP_GENERATING' }
   },

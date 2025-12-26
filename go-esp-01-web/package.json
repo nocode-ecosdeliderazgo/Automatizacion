@@ -10,6 +10,7 @@
     "supabase:types": "supabase gen types typescript --local > src/shared/types/database.types.ts"
   },
   "dependencies": {
+    "@google/generative-ai": "^0.24.1",
     "@hookform/resolvers": "^3.3.4",
     "@radix-ui/react-avatar": "^1.0.4",
     "@radix-ui/react-dialog": "^1.0.5",
