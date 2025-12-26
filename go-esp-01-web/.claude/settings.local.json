@@ -1,7 +1,8 @@
 {
   "permissions": {
     "allow": [
-      "Bash(del \"C:\\\\Users\\\\Gael\\\\Desktop\\\\Ecos de Liderazgo\\\\Automatizacion\\\\go-esp-01-web\\\\src\\\\app\\\\page.tsx\")"
+      "Bash(del \"C:\\\\Users\\\\Gael\\\\Desktop\\\\Ecos de Liderazgo\\\\Automatizacion\\\\go-esp-01-web\\\\src\\\\app\\\\page.tsx\")",
+      "Bash(cat:*)"
     ]
   }
 }

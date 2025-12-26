@@ -7,18 +7,19 @@ const mockArtifacts: Artifact[] = [
     run_id: 'run-001',
     course_id: 'course-001',
     idea_central: 'Liderazgo transformacional en tiempos de cambio',
-    nombres: ['Liderazgo Transformacional', 'Liderar el Cambio', 'Transformación Organizacional'],
+    nombres: ['Liderazgo Transformacional', 'Liderar el Cambio', 'Transformacion Organizacional'],
     objetivos: [
       'Comprender los principios del liderazgo transformacional',
-      'Aplicar técnicas de gestión del cambio',
-      'Desarrollar habilidades de comunicación efectiva'
+      'Aplicar tecnicas de gestion del cambio',
+      'Desarrollar habilidades de comunicacion efectiva',
+      'Implementar estrategias de motivacion de equipos'
     ],
     descripcion: {
-      texto: 'Curso enfocado en desarrollar habilidades de liderazgo para gestionar el cambio organizacional.',
-      publico_objetivo: 'Gerentes y líderes de equipo',
-      beneficios: 'Mejora en la gestión de equipos y adaptación al cambio',
-      estructura_general: '4 módulos con ejercicios prácticos',
-      diferenciador: 'Enfoque práctico con casos reales'
+      texto: 'Curso enfocado en desarrollar habilidades de liderazgo para gestionar el cambio organizacional. Los participantes aprenderan a inspirar y motivar equipos en entornos de alta incertidumbre.',
+      publico_objetivo: 'Gerentes y lideres de equipo',
+      beneficios: 'Mejora en la gestion de equipos y adaptacion al cambio',
+      estructura_general: '4 modulos con ejercicios practicos',
+      diferenciador: 'Enfoque practico con casos reales'
     },
     state: 'APPROVED',
     validation_report: { all_passed: true, results: [] },
@@ -218,5 +219,14 @@ export const artifactsService = {
       updated_at: new Date().toISOString()
     }
     return artifacts[index]
+  },
+
+  // QA Actions
+  async approve(id: string): Promise<Artifact | null> {
+    return this.update(id, { state: 'APPROVED' })
+  },
+
+  async reject(id: string): Promise<Artifact | null> {
+    return this.update(id, { state: 'REJECTED' })
   }
 }

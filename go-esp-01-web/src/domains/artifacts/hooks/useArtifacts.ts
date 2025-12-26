@@ -40,25 +40,27 @@ export function useArtifact(id: string) {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
-  useEffect(() => {
+  const fetchArtifact = useCallback(async () => {
     if (!id) return
 
     setLoading(true)
     setError(null)
 
-    artifactsService.getById(id)
-      .then(data => {
-        setArtifact(data)
-      })
-      .catch(err => {
-        setError(err.message)
-      })
-      .finally(() => {
-        setLoading(false)
-      })
+    try {
+      const data = await artifactsService.getById(id)
+      setArtifact(data)
+    } catch (err: any) {
+      setError(err.message)
+    } finally {
+      setLoading(false)
+    }
   }, [id])
 
-  return { artifact, loading, error }
+  useEffect(() => {
+    fetchArtifact()
+  }, [fetchArtifact])
+
+  return { artifact, loading, error, refetch: fetchArtifact }
 }
 
 export function useArtifactStats() {
