@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { createClient } from '@/shared/lib/supabase/client'
+import { artifactsService } from '@/domains/artifacts/services/artifacts.service'
 import type { PipelineProgress } from '../types/generation.types'
 import { PIPELINE_STATES } from '../types/generation.types'
 
@@ -12,59 +12,30 @@ export function usePipelineProgress(artifactId: string | null) {
   useEffect(() => {
     if (!artifactId) return
 
-    const supabase = createClient()
-
     // Get initial state
-    supabase
-      .from('artifacts')
-      .select('state')
-      .eq('id', artifactId)
-      .single()
-      .then(({ data, error }) => {
-        if (error) {
-          setError(error.message)
-          return
-        }
-
-        if (data) {
-          const stateInfo = PIPELINE_STATES[data.state as keyof typeof PIPELINE_STATES]
-          setProgress({
-            state: data.state,
-            message: stateInfo?.label || data.state,
-            progress: stateInfo?.progress || 0,
-            artifactId
-          })
-        }
-      })
-
-    // Subscribe to realtime updates
-    const channel = supabase
-      .channel(`artifact:${artifactId}`)
-      .on(
-        'postgres_changes',
-        {
-          event: 'UPDATE',
-          schema: 'public',
-          table: 'artifacts',
-          filter: `id=eq.${artifactId}`
-        },
-        (payload) => {
-          const artifact = payload.new as { state: string; id: string }
+    const fetchState = async () => {
+      try {
+        const artifact = await artifactsService.getById(artifactId)
+        if (artifact) {
           const stateInfo = PIPELINE_STATES[artifact.state as keyof typeof PIPELINE_STATES]
-
           setProgress({
             state: artifact.state,
             message: stateInfo?.label || artifact.state,
             progress: stateInfo?.progress || 0,
-            artifactId: artifact.id
+            artifactId
           })
         }
-      )
-      .subscribe()
-
-    return () => {
-      supabase.removeChannel(channel)
+      } catch (err: any) {
+        setError(err.message)
+      }
     }
+
+    fetchState()
+
+    // Poll for updates every 2 seconds (simulates realtime)
+    const interval = setInterval(fetchState, 2000)
+
+    return () => clearInterval(interval)
   }, [artifactId])
 
   return { progress, error }

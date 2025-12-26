@@ -8,7 +8,8 @@
       "WebFetch(domain:www.cometapi.com)",
       "WebFetch(domain:apidog.com)",
       "Bash(C:/Python314/python.exe:*)",
-      "Bash(npm install)"
+      "Bash(npm install)",
+      "Bash(taskkill:*)"
     ]
   }
 }

@@ -1,76 +1,25 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
-import { User, Session } from '@supabase/supabase-js'
-import { authService } from '../services/auth.service'
+import { useState } from 'react'
+
+// Mock user for development without Supabase
+const mockUser = {
+  id: 'mock-user-001',
+  email: 'dev@example.com',
+  created_at: new Date().toISOString()
+}
 
 export function useAuth() {
-  const router = useRouter()
-  const [user, setUser] = useState<User | null>(null)
-  const [session, setSession] = useState<Session | null>(null)
-  const [loading, setLoading] = useState(true)
+  const [loading] = useState(false)
 
-  useEffect(() => {
-    // Get initial session
-    authService.getSession().then((session) => {
-      setSession(session)
-      setUser(session?.user ?? null)
-      setLoading(false)
-    })
-
-    // Listen for auth changes
-    const { data: { subscription } } = authService.onAuthStateChange(
-      (event, session) => {
-        setSession(session)
-        setUser(session?.user ?? null)
-        setLoading(false)
-
-        if (event === 'SIGNED_OUT') {
-          router.push('/login')
-        }
-      }
-    )
-
-    return () => {
-      subscription.unsubscribe()
-    }
-  }, [router])
-
-  const signIn = async (email: string, password: string) => {
-    try {
-      await authService.signIn(email, password)
-      router.push('/')
-    } catch (error) {
-      throw error
-    }
-  }
-
-  const signUp = async (email: string, password: string) => {
-    try {
-      await authService.signUp(email, password)
-      // Supabase puede requerir verificación de email
-    } catch (error) {
-      throw error
-    }
-  }
-
-  const signOut = async () => {
-    try {
-      await authService.signOut()
-      router.push('/login')
-    } catch (error) {
-      throw error
-    }
-  }
-
+  // Always authenticated in dev mode
   return {
-    user,
-    session,
+    user: mockUser,
+    session: { user: mockUser },
     loading,
-    signIn,
-    signUp,
-    signOut,
-    isAuthenticated: !!session
+    signIn: async () => {},
+    signUp: async () => {},
+    signOut: async () => {},
+    isAuthenticated: true
   }
 }
