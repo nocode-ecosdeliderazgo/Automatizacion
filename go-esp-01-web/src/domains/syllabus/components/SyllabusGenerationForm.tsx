@@ -1,10 +1,12 @@
 'use client'
 
 import { useState } from 'react'
-import { Loader2, Sparkles, Upload, AlertCircle } from 'lucide-react'
+import { Loader2, Sparkles, Upload, AlertCircle, CheckCircle, XCircle } from 'lucide-react'
 import { Button } from '@/shared/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/shared/components/ui/card'
 import { Progress } from '@/shared/components/ui/progress'
+import { Textarea } from '@/shared/components/ui/textarea'
+import { Badge } from '@/shared/components/ui/badge'
 import { SyllabusRouteSelector } from './SyllabusRouteSelector'
 import { SyllabusViewer } from './SyllabusViewer'
 import { syllabusService } from '../services/syllabus.service'
@@ -28,6 +30,8 @@ export function SyllabusGenerationForm({
   const [route, setRoute] = useState<Esp02Route | null>(null)
   const [isGenerating, setIsGenerating] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [qaNote, setQaNote] = useState('')
+  const [isApproving, setIsApproving] = useState(false)
 
   const { progress } = useSyllabusProgress(isGenerating ? artifactId : null)
   const { temario, refetch } = useSyllabus(artifactId)
@@ -73,35 +77,148 @@ export function SyllabusGenerationForm({
     }
   }
 
+  const handleQaDecision = async (decision: 'APPROVED' | 'REJECTED') => {
+    setIsApproving(true)
+    try {
+      await syllabusService.applyQaDecision(artifactId, decision, qaNote)
+      refetch()
+      onComplete?.()
+    } catch (err: any) {
+      setError(err.message || 'Error al aplicar decision')
+    } finally {
+      setIsApproving(false)
+    }
+  }
+
   // Si ya hay un temario, mostrar el viewer
   if (temario && temario.modules.length > 0) {
+    const isReadyForQA = temario.state === 'STEP_READY_FOR_QA'
+    const isApproved = temario.state === 'STEP_APPROVED'
+    const isRejected = temario.state === 'STEP_REJECTED'
+
+    const getStateBadge = () => {
+      if (isApproved) return <Badge className="bg-green-100 text-green-800">Aprobado</Badge>
+      if (isRejected) return <Badge className="bg-red-100 text-red-800">Rechazado</Badge>
+      if (isReadyForQA) return <Badge className="bg-blue-100 text-blue-800">Pendiente Revision</Badge>
+      return <Badge variant="secondary">{temario.state.replace('STEP_', '')}</Badge>
+    }
+
     return (
       <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <div>
+          <div className="flex items-center gap-3">
             <h3 className="text-lg font-semibold">Temario Generado</h3>
-            <p className="text-sm text-muted-foreground">
-              Ruta: {temario.route === 'A_WITH_SOURCE' ? 'Con fuente' : 'Sin fuente'} |
-              Estado: {temario.state}
-            </p>
+            {getStateBadge()}
           </div>
-          {temario.state === 'STEP_REJECTED' && (
-            <Button onClick={handleGenerate} disabled={isGenerating}>
-              {isGenerating ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Regenerando...
-                </>
-              ) : (
-                <>
-                  <Sparkles className="mr-2 h-4 w-4" />
-                  Regenerar
-                </>
-              )}
-            </Button>
-          )}
+          <p className="text-sm text-muted-foreground">
+            Ruta: {temario.route === 'A_WITH_SOURCE' ? 'Con fuente' : 'Sin fuente'}
+          </p>
         </div>
+
         <SyllabusViewer modules={temario.modules} validation={temario.validation} />
+
+        {/* Panel de aprobacion para STEP_READY_FOR_QA */}
+        {isReadyForQA && (
+          <Card className="border-primary/50">
+            <CardHeader>
+              <CardTitle className="text-base">Decision del Revisor - Paso 2</CardTitle>
+              <CardDescription>
+                Revisa el temario generado y decide si aprobarlo o rechazarlo.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Notas (opcional)</label>
+                <Textarea
+                  placeholder="Observaciones sobre el temario..."
+                  value={qaNote}
+                  onChange={(e) => setQaNote(e.target.value)}
+                  rows={2}
+                />
+              </div>
+
+              {error && (
+                <div className="flex items-center gap-2 p-3 rounded-md bg-destructive/10 text-destructive">
+                  <AlertCircle className="h-4 w-4" />
+                  <span className="text-sm">{error}</span>
+                </div>
+              )}
+
+              <div className="flex gap-3">
+                <Button
+                  onClick={() => handleQaDecision('APPROVED')}
+                  disabled={isApproving}
+                  className="flex-1"
+                >
+                  {isApproving ? (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  ) : (
+                    <CheckCircle className="mr-2 h-4 w-4" />
+                  )}
+                  Aprobar Temario
+                </Button>
+                <Button
+                  onClick={() => handleQaDecision('REJECTED')}
+                  disabled={isApproving}
+                  variant="outline"
+                  className="flex-1"
+                >
+                  <XCircle className="mr-2 h-4 w-4" />
+                  Rechazar
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Mensaje de aprobado */}
+        {isApproved && (
+          <Card className="border-green-500 bg-green-50">
+            <CardContent className="py-4">
+              <div className="flex items-center gap-3">
+                <CheckCircle className="h-6 w-6 text-green-500" />
+                <div>
+                  <h4 className="font-medium">Temario Aprobado</h4>
+                  <p className="text-sm text-muted-foreground">
+                    El Paso 2 ha sido completado. Puedes continuar con el Paso 3.
+                  </p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Boton regenerar si rechazado */}
+        {isRejected && (
+          <Card className="border-red-500 bg-red-50">
+            <CardContent className="py-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <XCircle className="h-6 w-6 text-red-500" />
+                  <div>
+                    <h4 className="font-medium">Temario Rechazado</h4>
+                    {temario.qa.notes && (
+                      <p className="text-sm text-muted-foreground">{temario.qa.notes}</p>
+                    )}
+                  </div>
+                </div>
+                <Button onClick={handleGenerate} disabled={isGenerating}>
+                  {isGenerating ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Regenerando...
+                    </>
+                  ) : (
+                    <>
+                      <Sparkles className="mr-2 h-4 w-4" />
+                      Regenerar
+                    </>
+                  )}
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        )}
       </div>
     )
   }
