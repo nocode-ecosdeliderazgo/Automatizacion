@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { CheckCircle, XCircle, AlertCircle, Loader2, BookOpen, ClipboardList } from 'lucide-react'
+import { CheckCircle, XCircle, AlertCircle, Loader2, BookOpen, ClipboardList, Library } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/card'
 import { Badge } from '@/shared/components/ui/badge'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/components/ui/tabs'
@@ -11,6 +11,7 @@ import { useArtifact } from '../hooks/useArtifacts'
 import { ArtifactQAActions } from './ArtifactQAActions'
 import { SyllabusGenerationForm, useSyllabus } from '@/domains/syllabus'
 import { InstructionalPlanForm, useInstructionalPlan } from '@/domains/instructionalPlan'
+import { CurationForm, useCuration } from '@/domains/curation'
 import type { ArtifactDescription, ValidationReport, SemanticResult } from '../types/artifact.types'
 
 interface Props {
@@ -21,6 +22,7 @@ export function ArtifactViewer({ artifactId }: Props) {
   const { artifact, loading, error, refetch } = useArtifact(artifactId)
   const { temario } = useSyllabus(artifactId)
   const { plan: instructionalPlan } = useInstructionalPlan(artifactId)
+  const { curation } = useCuration(artifactId)
   const [refreshKey, setRefreshKey] = useState(0)
 
   const handleQAAction = () => {
@@ -57,6 +59,9 @@ export function ArtifactViewer({ artifactId }: Props) {
   const hasPaso2 = temario && temario.modules.length > 0
   const isPaso2Approved = temario?.state === 'STEP_APPROVED'
   const hasPaso3 = instructionalPlan && instructionalPlan.lesson_plans.length > 0
+  const isPaso3Approved = instructionalPlan?.state === 'STEP_APPROVED'
+  const hasPaso4 = curation && curation.rows.length > 0
+  const isPaso4Approved = curation?.state === 'PHASE2_APPROVED'
 
   return (
     <div className="space-y-6">
@@ -83,6 +88,11 @@ export function ArtifactViewer({ artifactId }: Props) {
                 Paso 3: {getStateLabel(instructionalPlan.state.replace('STEP_', ''))}
               </Badge>
             )}
+            {hasPaso4 && (
+              <Badge className={getStateColor(curation.state.replace('PHASE2_', ''))}>
+                Paso 4: {getStateLabel(curation.state.replace('PHASE2_', ''))}
+              </Badge>
+            )}
             <span className="text-sm text-muted-foreground">
               Creado: {formatDate(artifact.created_at)}
             </span>
@@ -90,24 +100,27 @@ export function ArtifactViewer({ artifactId }: Props) {
         </div>
       </div>
 
-      {/* Tabs principales: Paso 1, Paso 2 y Paso 3 */}
+      {/* Tabs principales: Paso 1, Paso 2, Paso 3 y Paso 4 */}
       <Tabs defaultValue="paso1">
-        <TabsList className="grid w-full grid-cols-3">
+        <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="paso1" className="flex items-center gap-2">
-            Paso 1: Artefacto
+            Paso 1
             {isPaso1Approved && <CheckCircle className="h-4 w-4 text-green-500" />}
           </TabsTrigger>
           <TabsTrigger value="paso2" className="flex items-center gap-2">
             <BookOpen className="h-4 w-4" />
-            Paso 2: Temario
+            Paso 2
             {isPaso2Approved && <CheckCircle className="h-4 w-4 text-green-500" />}
           </TabsTrigger>
           <TabsTrigger value="paso3" className="flex items-center gap-2">
             <ClipboardList className="h-4 w-4" />
-            Paso 3: Plan
-            {instructionalPlan?.state === 'STEP_APPROVED' && (
-              <CheckCircle className="h-4 w-4 text-green-500" />
-            )}
+            Paso 3
+            {isPaso3Approved && <CheckCircle className="h-4 w-4 text-green-500" />}
+          </TabsTrigger>
+          <TabsTrigger value="paso4" className="flex items-center gap-2">
+            <Library className="h-4 w-4" />
+            Paso 4
+            {isPaso4Approved && <CheckCircle className="h-4 w-4 text-green-500" />}
           </TabsTrigger>
         </TabsList>
 
@@ -328,6 +341,29 @@ export function ArtifactViewer({ artifactId }: Props) {
             </Card>
           ) : (
             <InstructionalPlanForm
+              artifactId={artifactId}
+              courseName={nombres?.[0] || artifact.idea_central}
+            />
+          )}
+        </TabsContent>
+
+        {/* PASO 4: CURADURIA DE FUENTES */}
+        <TabsContent value="paso4" className="mt-6">
+          {!isPaso3Approved ? (
+            <Card>
+              <CardContent className="py-12 text-center">
+                <AlertCircle className="h-12 w-12 text-yellow-500 mx-auto mb-4" />
+                <h3 className="font-medium text-lg">Paso 3 pendiente</h3>
+                <p className="text-muted-foreground mt-2">
+                  El Paso 3 (Plan Instruccional) debe estar aprobado antes de iniciar la curaduria.
+                </p>
+                <p className="text-sm text-muted-foreground mt-1">
+                  Estado actual del plan: {instructionalPlan?.state?.replace('STEP_', '') || 'Sin iniciar'}
+                </p>
+              </CardContent>
+            </Card>
+          ) : (
+            <CurationForm
               artifactId={artifactId}
               courseName={nombres?.[0] || artifact.idea_central}
             />

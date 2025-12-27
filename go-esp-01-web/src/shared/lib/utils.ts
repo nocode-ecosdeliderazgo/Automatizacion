@@ -26,6 +26,11 @@ export function getStateColor(state: string): string {
     REJECTED: 'bg-red-100 text-red-800',
     ESCALATED: 'bg-orange-100 text-orange-800',
     WITH_BLOCKERS: 'bg-orange-100 text-orange-800',
+    // ESP-04 (Fase 2)
+    GENERATED: 'bg-blue-100 text-blue-800',
+    HITL_REVIEW: 'bg-purple-100 text-purple-800',
+    CORRECTABLE: 'bg-yellow-100 text-yellow-800',
+    BLOCKED: 'bg-red-100 text-red-800',
   }
   return colors[state] || 'bg-gray-100 text-gray-800'
 }
@@ -36,11 +41,16 @@ export function getStateLabel(state: string): string {
     GENERATING: 'Generando',
     VALIDATING: 'Validando',
     READY_FOR_QA: 'Pendiente QA',
-    READY_FOR_REVIEW: 'Pendiente Revisión',
+    READY_FOR_REVIEW: 'Pendiente Revision',
     APPROVED: 'Aprobado',
     REJECTED: 'Rechazado',
     ESCALATED: 'Escalado',
     WITH_BLOCKERS: 'Con Bloqueadores',
+    // ESP-04 (Fase 2)
+    GENERATED: 'Generado',
+    HITL_REVIEW: 'En Revision',
+    CORRECTABLE: 'Corregible',
+    BLOCKED: 'Bloqueado',
   }
   return labels[state] || state
 }
