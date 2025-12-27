@@ -74,13 +74,13 @@ export function ArtifactViewer({ artifactId }: Props) {
               Paso 1: {getStateLabel(artifact.state)}
             </Badge>
             {hasPaso2 && (
-              <Badge className={getStateColor(temario.state.replace('STEP_', '') as any)}>
-                Paso 2: {temario.state.replace('STEP_', '')}
+              <Badge className={getStateColor(temario.state.replace('STEP_', ''))}>
+                Paso 2: {getStateLabel(temario.state.replace('STEP_', ''))}
               </Badge>
             )}
             {hasPaso3 && (
-              <Badge className={getStateColor(instructionalPlan.state.replace('STEP_', '') as any)}>
-                Paso 3: {instructionalPlan.state.replace('STEP_', '')}
+              <Badge className={getStateColor(instructionalPlan.state.replace('STEP_', ''))}>
+                Paso 3: {getStateLabel(instructionalPlan.state.replace('STEP_', ''))}
               </Badge>
             )}
             <span className="text-sm text-muted-foreground">

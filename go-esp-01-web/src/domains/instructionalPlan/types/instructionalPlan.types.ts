@@ -28,7 +28,9 @@ export interface PlanComponent {
 export interface LessonPlan {
   lesson_id: string
   lesson_title: string
+  module_id: string
   module_title: string
+  module_index: number
   oa_text: string
   oa_bloom_verb?: string
   measurable_criteria?: string
@@ -100,7 +102,9 @@ export interface LessonInput {
   id: string
   title: string
   objective_specific: string
+  module_id: string
   module_title: string
+  module_index: number
 }
 
 export interface InstructionalPlanApiInput {

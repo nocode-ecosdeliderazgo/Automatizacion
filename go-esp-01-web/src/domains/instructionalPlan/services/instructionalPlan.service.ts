@@ -70,15 +70,18 @@ export const instructionalPlanService = {
     try {
       console.log('[ESP-03] Iniciando generación de plan instruccional')
 
-      // Preparar lecciones para la API
+      // Preparar lecciones para la API con module_id y module_index
       const lessons: LessonInput[] = []
-      for (const mod of modules) {
+      for (let moduleIndex = 0; moduleIndex < modules.length; moduleIndex++) {
+        const mod = modules[moduleIndex]
         for (const lesson of mod.lessons || []) {
           lessons.push({
             id: lesson.id,
             title: lesson.title,
             objective_specific: lesson.objective_specific,
-            module_title: mod.title
+            module_id: mod.id,
+            module_title: mod.title,
+            module_index: moduleIndex
           })
         }
       }

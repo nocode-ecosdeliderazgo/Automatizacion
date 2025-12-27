@@ -10,7 +10,9 @@ interface LessonInput {
   id: string
   title: string
   objective_specific: string
+  module_id: string
   module_title: string
+  module_index: number
 }
 
 interface PlanComponent {
@@ -22,7 +24,9 @@ interface PlanComponent {
 interface LessonPlan {
   lesson_id: string
   lesson_title: string
+  module_id: string
   module_title: string
+  module_index: number
   oa_text: string
   oa_bloom_verb?: string
   measurable_criteria?: string
@@ -101,6 +105,34 @@ export async function POST(request: NextRequest) {
       console.log('[API/ESP-03] S02 falló - agregando componentes faltantes...')
       content.lesson_plans = await addMissingDemoGuides(model, content.lesson_plans, ideaCentral)
     }
+
+    // IMPORTANTE: Inyectar module_id, module_title y module_index desde las lecciones originales
+    // Esto garantiza que el agrupamiento sea correcto sin depender de la IA
+    const lessonLookup = new Map<string, LessonInput>()
+    for (const lesson of lessons) {
+      lessonLookup.set(lesson.id, lesson)
+    }
+
+    content.lesson_plans = content.lesson_plans.map(lp => {
+      const originalLesson = lessonLookup.get(lp.lesson_id)
+      if (originalLesson) {
+        return {
+          ...lp,
+          module_id: originalLesson.module_id,
+          module_title: originalLesson.module_title,
+          module_index: originalLesson.module_index
+        }
+      }
+      return lp
+    })
+
+    // Ordenar por module_index y luego por lesson_id para consistencia
+    content.lesson_plans.sort((a, b) => {
+      if (a.module_index !== b.module_index) {
+        return a.module_index - b.module_index
+      }
+      return a.lesson_id.localeCompare(b.lesson_id)
+    })
 
     console.log('[API/ESP-03] Generado exitosamente:', content.lesson_plans?.length, 'planes de lección')
     return NextResponse.json(content)

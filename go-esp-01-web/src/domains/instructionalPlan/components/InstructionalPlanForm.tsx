@@ -123,14 +123,32 @@ export function InstructionalPlanForm({ artifactId, courseName }: InstructionalP
     return 'Pendiente Revisión'
   }
 
-  // Agrupar lecciones por módulo
-  const moduleMap = new Map<string, typeof plan.lesson_plans>()
+  // Agrupar lecciones por módulo usando module_id y ordenar por module_index
+  const moduleMap = new Map<string, { title: string; index: number; lessons: typeof plan.lesson_plans }>()
   for (const lp of plan.lesson_plans) {
-    const existing = moduleMap.get(lp.module_title) || []
-    existing.push(lp)
-    moduleMap.set(lp.module_title, existing)
+    const moduleId = lp.module_id || lp.module_title // fallback para compatibilidad
+    const existing = moduleMap.get(moduleId)
+    if (existing) {
+      existing.lessons.push(lp)
+    } else {
+      moduleMap.set(moduleId, {
+        title: lp.module_title,
+        index: lp.module_index ?? 999,
+        lessons: [lp]
+      })
+    }
   }
+
+  // Convertir a array y ordenar por module_index
   const modules = Array.from(moduleMap.entries())
+    .sort((a, b) => a[1].index - b[1].index)
+
+  // Funcion para limpiar prefijos duplicados del titulo del modulo
+  const cleanModuleTitle = (title: string): string => {
+    if (!title) return '(Sin título)'
+    // Remover prefijos como "Módulo 1:", "Modulo 2:", etc.
+    return title.replace(/^M[óo]dulo\s+\d+\s*:\s*/i, '').trim() || title
+  }
 
   return (
     <div className="space-y-6">
@@ -170,14 +188,14 @@ export function InstructionalPlanForm({ artifactId, courseName }: InstructionalP
 
         {/* Tab: Plan */}
         <TabsContent value="plan" className="space-y-4 mt-4">
-          {modules.map(([moduleTitle, lessons], moduleIndex) => (
-            <div key={moduleTitle} className="space-y-3">
+          {modules.map(([moduleId, moduleData], displayIndex) => (
+            <div key={moduleId} className="space-y-3">
               <h3 className="font-medium text-lg flex items-center gap-2">
-                <span className="text-muted-foreground">Módulo {moduleIndex + 1}:</span>
-                {moduleTitle}
+                <span className="text-muted-foreground">Módulo {displayIndex + 1}:</span>
+                {cleanModuleTitle(moduleData.title)}
               </h3>
               <div className="space-y-2 pl-4">
-                {lessons.map((lp, index) => (
+                {moduleData.lessons.map((lp, index) => (
                   <LessonPlanCard
                     key={lp.lesson_id}
                     lessonPlan={lp}

@@ -21,9 +21,11 @@ export function getStateColor(state: string): string {
     GENERATING: 'bg-blue-100 text-blue-800',
     VALIDATING: 'bg-yellow-100 text-yellow-800',
     READY_FOR_QA: 'bg-purple-100 text-purple-800',
+    READY_FOR_REVIEW: 'bg-purple-100 text-purple-800',
     APPROVED: 'bg-green-100 text-green-800',
     REJECTED: 'bg-red-100 text-red-800',
     ESCALATED: 'bg-orange-100 text-orange-800',
+    WITH_BLOCKERS: 'bg-orange-100 text-orange-800',
   }
   return colors[state] || 'bg-gray-100 text-gray-800'
 }
@@ -34,9 +36,11 @@ export function getStateLabel(state: string): string {
     GENERATING: 'Generando',
     VALIDATING: 'Validando',
     READY_FOR_QA: 'Pendiente QA',
+    READY_FOR_REVIEW: 'Pendiente Revisión',
     APPROVED: 'Aprobado',
     REJECTED: 'Rechazado',
     ESCALATED: 'Escalado',
+    WITH_BLOCKERS: 'Con Bloqueadores',
   }
   return labels[state] || state
 }
